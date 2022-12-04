@@ -11,7 +11,7 @@
 file = File.open("puzzle_input.txt")
 
 @them = {A: 'Rock', B: 'Paper', C: 'Scissors'}
-@mine = {Y: 'Paper', X: 'Rock', Z: 'Scissors'}
+@mine = {Y: 'Draw', X: 'Loose', Z: 'Win'}
 @points = {'Rock' => 1, 'Paper' => 2, 'Scissors' => 3}
 
 @score = 0
@@ -24,7 +24,6 @@ file = File.open("puzzle_input.txt")
 
 
 def outcome(me, them)
-
   puts "me == them #{me == them}"
   puts "me == condition #{them == @conditions.key(me)}"
 
@@ -38,11 +37,24 @@ def winner(me, them)
   return 'me' if me == @conditions.key(them)
   return 'them'
 end
-def score_play(opponent, my_move)
-  their_play = @them[opponent]
-  my_play = @mine[my_move]
 
-  puts "Them #{opponent}, #{their_play} vs me #{my_move}, #{my_play} => Winner: #{winner(my_play, their_play)}"
+def what_to_play(opponent_throw, expected_outcome)
+  puts " #{opponent_throw} Putting #{expected_outcome} == 'Draw' #{expected_outcome.to_s == 'Draw'}"
+  #puts "conditions[] #{@conditions[opponent_throw]}"
+  #puts "conditions.key #{@conditions.key(opponent_throw)}"
+  return opponent_throw if expected_outcome.to_s == 'Draw'
+  return @conditions.key(opponent_throw) if expected_outcome.to_s == 'Win'
+  return @conditions[opponent_throw]
+end
+
+def score_play(opponent, desired_outcome)
+  their_play = @them[opponent]
+  round_end = @mine[desired_outcome]
+
+  puts "Desired outcome #{round_end} opponent threw #{their_play}"
+  my_play = what_to_play(their_play, round_end)
+  puts "my play: #{my_play}"
+  puts "Them #{opponent}, #{their_play} vs me #{desired_outcome}, #{my_play} => Winner: #{winner(my_play, their_play)}"
 
   points_for_throw = @points[my_play] # points for the 'throw'
   points_for_outcome = outcome(my_play, their_play)
