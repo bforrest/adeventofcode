@@ -42,7 +42,23 @@
 @stacks[9] = %w[G Z D L C N R]
 
 puts "stacks: #{@stacks}"
+
 file = File.open('input.txt')
+
+def crate_mover_9000(dest, num_containers, source)
+  while num_containers >= 1
+    @stacks[dest].push(@stacks[source].pop)
+    num_containers -= 1
+  end
+  num_containers
+end
+
+# JSDHQMZGF
+def crate_mover_9001(dest, num_containers, source)
+  #to_move = @stacks[source].pop(num_containers)
+  @stacks[dest].concat(@stacks[source].pop(num_containers))
+end
+
 file.each_line do |line|
   puts line
   command = line.strip.split
@@ -59,14 +75,14 @@ file.each_line do |line|
   #puts "source: #{source} => #{@stacks[source]}" if num_containers > 10
   #puts "destination: #{dest} #{@stacks[dest]}" if num_containers > 10
 
-  while num_containers >= 1
-    @stacks[dest].push(@stacks[source].pop)
-    num_containers -= 1
-    #puts "num_containers: #{num_containers}"
-  end
+  # CrateMover 9000
+  #num_containers = crate_mover_9000(dest, num_containers, source)
 
-  puts "source: #{source} => #{@stacks[source]}" if num_containers > 10
-  puts "destination: #{dest} #{@stacks[dest]}" if num_containers > 10
+  # CrateMover 9001
+  num_containers = crate_mover_9001(dest, num_containers, source)
+
+  #puts "source: #{source} => #{@stacks[source]}" if num_containers > 10
+  #puts "destination: #{dest} #{@stacks[dest]}" if num_containers > 10
 end
 
 puts "Finished: #{@stacks}"
